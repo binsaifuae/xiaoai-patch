@@ -24,6 +24,7 @@ configure_package() {
 		--disable-vpx \
 		--disable-opencore-amr \
 		--disable-silk \
+		--disable-speex \
 		--disable-tls
 }
 
