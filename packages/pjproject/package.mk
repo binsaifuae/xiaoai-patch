@@ -4,6 +4,19 @@ PACKAGE_SRC="https://github.com/pjsip/pjproject/archive/refs/tags/${PACKAGE_VERS
 PACKAGE_DEPENDS="alsa-lib"
 
 configure_package() {
+	# Disable the bundled Speex codec.
+	# The build environment already contains incompatible Speex headers.
+	mkdir -p pjlib/include/pj
+
+	cat > pjlib/include/pj/config_site.h <<'EOF'
+#ifndef __PJ_CONFIG_SITE_H__
+#define __PJ_CONFIG_SITE_H__
+
+#define PJMEDIA_HAS_SPEEX_CODEC 0
+
+#endif
+EOF
+
 	CC="${BUILD_CC}" \
 	CXX="${BUILD_CXX}" \
 	CFLAGS="${BUILD_CFLAGS}" \
@@ -23,9 +36,7 @@ configure_package() {
 		--disable-libyuv \
 		--disable-vpx \
 		--disable-opencore-amr \
-		--disable-silk \
-		--disable-speex \
-		--disable-tls
+		--disable-silk
 }
 
 make_package() {
